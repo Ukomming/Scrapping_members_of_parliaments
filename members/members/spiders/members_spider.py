@@ -1,4 +1,5 @@
 import scrapy
+from ..items import MembersItem
 
 
 class MembersSpider(scrapy.Spider):
@@ -35,11 +36,15 @@ class MembersSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
+        items = MembersItem()
+        names = len(response.xpath("//center/b[@class='padd']/text()").getall())
+        for num in range(0, names):
             yield {
-                'name': response.xpath("//center/b[@class='padd']/text()").getall(),
-                'party': response.xpath("//center/p/text()").getall(),
-                'constituency': response.xpath("//center/b[2]/text()").getall(),
-                'region': response.xpath("//center/span/text()").getall()
+                'name': response.xpath("//center/b[@class='padd']/text()").getall()[num],
+                'party': response.xpath("//center/p/text()").getall()[num],
+                'constituency': response.xpath("//center/b[2]/text()").getall()[num],
+                'region': response.xpath("//p/following-sibling::span/text()").getall()[num]
+
 
             }
 # response.xpath("//center/b[@class='padd']/text()").getall()   name
